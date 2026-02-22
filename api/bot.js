@@ -18,18 +18,41 @@ export default async function handler(req, res) {
     }
 
     const chatId = message.chat.id;
+    const text = message.text ? message.text.trim() : "";
 
-    // رد عام لأي رسالة نصية
-    await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: "تم استلام رسالتك 🔥",
-      }),
-    });
+    // أمر /start
+    if (text === "/start") {
+      await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: "🔥 مرحباً بك في MrX-Stor\nاضغط الزر لفتح المتجر 👇",
+          reply_markup: {
+            inline_keyboard: [
+              [
+                {
+                  text: "🛒 فتح المتجر",
+                  web_app: {
+                    url: "https://mrx-card.vercel.app"
+                  }
+                }
+              ]
+            ]
+          }
+        }),
+      });
+    } 
+    else {
+      await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: "استخدم /start لفتح المتجر 🛒",
+        }),
+      });
+    }
 
     return res.status(200).end();
   } catch (error) {
