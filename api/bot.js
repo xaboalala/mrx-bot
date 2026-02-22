@@ -11,27 +11,25 @@ export default async function handler(req, res) {
 
   try {
     const update = req.body;
+    const message = update?.message;
 
-    if (!update || !update.message) {
+    if (!message) {
       return res.status(200).end();
     }
 
-    const message = update.message;
     const chatId = message.chat.id;
-    const text = message.text;
 
-    if (text === "/start") {
-      await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: "🔥 مرحباً بك في MrX-Stor",
-        }),
-      });
-    }
+    // رد عام لأي رسالة نصية
+    await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: "تم استلام رسالتك 🔥",
+      }),
+    });
 
     return res.status(200).end();
   } catch (error) {
