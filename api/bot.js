@@ -1,27 +1,23 @@
-import TelegramBot from "node-telegram-bot-api";
-
-const token = process.env.BOT_TOKEN;
-
-const bot = new TelegramBot(token, {
-  polling: false, // مهم جداً تعطيله
-});
-
 export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const update = req.body;
-
-    try {
-      await bot.processUpdate(update);
-    } catch (error) {
-      console.error("Error processing update:", error);
-    }
-
-    return res.status(200).send("OK");
+  if (req.method !== "POST") {
+    return res.status(200).send("Bot is running");
   }
 
-  res.status(200).send("Bot is running");
-}
+  const update = req.body;
+  const message = update.message;
 
-bot.on("message", async (msg) => {
-  await bot.sendMessage(msg.chat.id, "🔥 مرحباً بك في MrX-Stor");
-});
+  if (message?.text === "/start") {
+    await fetch(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chat_id: message.chat.id,
+        text: "🔥 مرحباً بك في MrX-Stor",
+      }),
+    });
+  }
+
+  return res.status(200).end();
+}
