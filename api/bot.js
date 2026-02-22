@@ -34,7 +34,7 @@ export default async function handler(req, res) {
                 {
                   text: "🛒 فتح المتجر",
                   web_app: {
-                    url: "https://mrx-card.vercel.app"
+                    url: "https://mrx-bot-coral.vercel.app/"
                   }
                 }
               ]
